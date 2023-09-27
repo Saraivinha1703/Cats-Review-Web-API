@@ -1,4 +1,7 @@
 using CatsReviewWebAPI.Data;
+using CatsReviewWebAPI.Interfaces;
+using CatsReviewWebAPI.Models;
+using CatsReviewWebAPI.Respository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<Seed>();
+builder.Services.AddScoped<IRepository<Cat>, CatRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -21,9 +25,9 @@ SeedData(app);
 void SeedData(IHost app) {
     var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
 
-    using (var scope = scopedFactory.CreateScope()){
-        var service = scope.ServiceProvider.GetService<Seed>();
-        service.SeedDataContext();
+    using (var scope = scopedFactory?.CreateScope()){
+        var service = scope?.ServiceProvider.GetService<Seed>();
+        service?.SeedDataContext();
     }
 }
 
