@@ -1,11 +1,12 @@
 
-namespace CatsReviewWebAPI.Models 
+namespace CatsReviewWebAPI.Models
 {
-    public class Review {
-        public int Id {get; set;}
-        public string? Title {get;set;}
-        public string? Text {get;set;}
-        public Reviewer? Reviewer {get;set;}
-        public Cat? Cat {get;set;}
+    public class Review
+    {
+        public int Id { get; set; }
+        public string? Title { get; set; }
+        public string? Text { get; set; }
+        public Reviewer? Reviewer { get; set; }
+        public Cat? Cat { get; set; }
     }
 }
