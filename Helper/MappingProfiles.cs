@@ -8,6 +8,11 @@ namespace CatsReviewWebAPI.Helper {
         public MappingProfiles()
         {
             CreateMap<Cat, CatDto>();
+            CreateMap<Category, CategoryDto>();
+            CreateMap<Country, CountryDto>();
+            CreateMap<Owner, OwnerDto>();
+            CreateMap<Review, ReviewDto>();
+            CreateMap<Reviewer, ReviewerDto>();
         }
     }
 }
