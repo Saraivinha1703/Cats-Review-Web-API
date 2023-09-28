@@ -34,5 +34,17 @@ namespace CatsReviewWebAPI.Repository {
         {
             return _context.Owners.Where(o => o.Country.Id == countryId).ToList();
         }
+
+        public bool CreateObject(Country obj)
+        {
+            _context.Add(obj);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            int num = _context.SaveChanges();
+            return num > 0 ? true : false;
+        }
     }
 }

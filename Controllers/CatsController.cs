@@ -3,6 +3,7 @@ using CatsReviewWebAPI.Dto;
 using CatsReviewWebAPI.Interfaces;
 using CatsReviewWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace CatsReviewWebAPI.Controllers
 {
@@ -11,11 +12,15 @@ namespace CatsReviewWebAPI.Controllers
     public class CatsController : Controller
     {
         private readonly ICatRepository _catRepository;
+        private readonly IOwnerRepository _ownerRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public CatsController(ICatRepository repository, IMapper mapper)
+        public CatsController(ICatRepository repository, IOwnerRepository ownerRepository, ICategoryRepository categoryRepository, IMapper mapper)
         {
             _catRepository = repository;
+            _categoryRepository = categoryRepository;
+            _ownerRepository = ownerRepository;
             _mapper = mapper;
         }
 
@@ -78,6 +83,40 @@ namespace CatsReviewWebAPI.Controllers
                 return BadRequest(ModelState);
 
             return Ok(cat);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateCat([FromQuery] int ownerId, [FromQuery] int categoryId, [FromBody] CatDto createCat)
+        {
+            if (createCat == null)
+                BadRequest(ModelState);
+
+            var cat = _catRepository.GetValues().Where(c => c.Name?.Trim().ToUpper() == createCat?.Name?.TrimEnd().ToUpper()).FirstOrDefault();
+
+            if (cat != null)
+            {
+                ModelState.AddModelError("", "Cat already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                BadRequest(ModelState);
+
+            var catMap = _mapper.Map<Cat>(createCat);
+            Owner? catOwnerEntity = _ownerRepository.GetValue(ownerId);
+            Category? catCategory = _categoryRepository.GetValue(categoryId);
+
+            CatOwner catOwner = new CatOwner(){Owner = catOwnerEntity, Cat = catMap};
+            
+            if (!_catRepository.CreateObject(catMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Soccessfully created");
         }
     }
 

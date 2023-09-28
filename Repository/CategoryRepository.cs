@@ -30,5 +30,17 @@ namespace CatsReviewWebAPI.Repository {
         {
             return _context.Categories.Any(c => c.Id == id);
         }
+
+        public bool CreateObject(Category obj)
+        {
+            _context.Add(obj);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var num = _context.SaveChanges();
+            return num > 0 ? true : false;
+        }
     }
 }

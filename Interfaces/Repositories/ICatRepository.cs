@@ -1,4 +1,5 @@
 using CatsReviewWebAPI.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace CatsReviewWebAPI.Interfaces
 {
