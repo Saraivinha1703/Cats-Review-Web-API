@@ -2,7 +2,8 @@ using CatsReviewWebAPI.Data;
 using CatsReviewWebAPI.Interfaces;
 using CatsReviewWebAPI.Models;
 
-namespace CatsReviewWebAPI.Repository {
+namespace CatsReviewWebAPI.Repository
+{
     public class CategoryRepository : ICategoryRepository
     {
         private readonly DataContext _context;
@@ -17,7 +18,8 @@ namespace CatsReviewWebAPI.Repository {
             return _context.Categories.OrderBy(c => c.Id).ToList();
         }
 
-        public List<Cat?> GetCatsByCategory(int categoryId) {
+        public List<Cat?> GetCatsByCategory(int categoryId)
+        {
             return _context.CatCategories.Where(cc => cc.CategoryId == categoryId).Select(cc => cc.Cat).ToList();
         }
 
@@ -34,6 +36,12 @@ namespace CatsReviewWebAPI.Repository {
         public bool CreateObject(Category obj)
         {
             _context.Add(obj);
+            return Save();
+        }
+
+        public bool UpdateObject(Category obj)
+        {
+            _context.Update(obj);
             return Save();
         }
 

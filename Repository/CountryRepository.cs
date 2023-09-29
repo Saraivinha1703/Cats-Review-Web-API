@@ -2,7 +2,8 @@ using CatsReviewWebAPI.Data;
 using CatsReviewWebAPI.Interfaces;
 using CatsReviewWebAPI.Models;
 
-namespace CatsReviewWebAPI.Repository {
+namespace CatsReviewWebAPI.Repository
+{
     public class CountryRepository : ICountryRepository
     {
         private readonly DataContext _context;
@@ -38,6 +39,12 @@ namespace CatsReviewWebAPI.Repository {
         public bool CreateObject(Country obj)
         {
             _context.Add(obj);
+            return Save();
+        }
+
+        public bool UpdateObject(Country obj)
+        {
+            _context.Update(obj);
             return Save();
         }
 

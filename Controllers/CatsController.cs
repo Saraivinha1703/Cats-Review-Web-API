@@ -121,9 +121,9 @@ namespace CatsReviewWebAPI.Controllers
             Owner? owner = _ownerRepository.GetValue(ownerId);
             Category? category = _categoryRepository.GetValue(categoryId);
 
-            CatOwner catOwner = new CatOwner(){Owner = owner, Cat = catMap};
-            CatCategory catCategory = new CatCategory(){Category = category, Cat = catMap};
-            
+            CatOwner catOwner = new CatOwner() { Owner = owner, Cat = catMap };
+            CatCategory catCategory = new CatCategory() { Category = category, Cat = catMap };
+
             if (!_catRepository.CreateObject(catMap, catOwner, catCategory))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
@@ -131,6 +131,41 @@ namespace CatsReviewWebAPI.Controllers
             }
 
             return Ok("Soccessfully created");
+        }
+
+        [HttpPut("{catId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCat(int catId, [FromQuery] int ownerId, [FromQuery] int categoryId, [FromBody] CatDto createCat)
+        {
+            if (createCat == null)
+                BadRequest(ModelState);
+
+            var cat = _catRepository.GetValues().Where(c => c.Id == createCat?.Id).FirstOrDefault();
+
+            if (cat == null)
+                NotFound();
+
+            if (!ModelState.IsValid)
+                BadRequest(ModelState);
+
+            if (catId != createCat.Id)
+                BadRequest(ModelState);
+
+            var catMap = _mapper.Map<Cat>(createCat);
+            Owner? owner = _ownerRepository.GetValue(ownerId);
+            Category? category = _categoryRepository.GetValue(categoryId);
+            CatOwner catOwner = new CatOwner() { Owner = owner, Cat = catMap };
+            CatCategory catCategory = new CatCategory() { Category = category, Cat = catMap };
+
+            if (!_catRepository.UpdateObject(catMap, catOwner, catCategory))
+            {
+                ModelState.AddModelError("", "Something went wrong while updating");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Soccessfully updated");
         }
     }
 

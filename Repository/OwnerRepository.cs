@@ -4,8 +4,10 @@ using CatsReviewWebAPI.Data;
 using CatsReviewWebAPI.Interfaces;
 using CatsReviewWebAPI.Models;
 
-namespace CatsReviewWebAPI.Repository {
-    public class OwnerRepository : IOwnerRepository {
+namespace CatsReviewWebAPI.Repository
+{
+    public class OwnerRepository : IOwnerRepository
+    {
         private readonly DataContext _context;
 
         public OwnerRepository(DataContext context)
@@ -44,10 +46,17 @@ namespace CatsReviewWebAPI.Repository {
             return Save();
         }
 
+        public bool UpdateObject(Owner obj)
+        {
+            _context.Update(obj);
+            return Save();
+        }
+
+
         public bool Save()
         {
             int num = _context.SaveChanges();
-            return num > 0 ? true : false; 
+            return num > 0 ? true : false;
         }
     }
 }

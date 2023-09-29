@@ -52,11 +52,24 @@ namespace CatsReviewWebAPI.Repository
             return Save();
         }
 
+        public bool UpdateObject(Cat obj){
+            _context.Update(obj);
+            return Save();
+        }
+
         public bool CreateObject(Cat cat, CatOwner catOwner, CatCategory catCategory)
         {
             _context.Add(catOwner);
             _context.Add(catCategory);
             _context.Add(cat);
+            return Save();
+        }
+
+        public bool UpdateObject(Cat cat, CatOwner catOwner, CatCategory catCategory)
+        {
+            _context.Update(cat);
+            _context.Update(catOwner);
+            _context.Update(catCategory);
             return Save();
         }
 

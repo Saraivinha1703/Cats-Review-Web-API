@@ -40,6 +40,12 @@ namespace CatsReviewWebAPI.Repository
             return Save();
         }
 
+        public bool UpdateObject(Reviewer obj)
+        {
+            _context.Update(obj);
+            return Save();
+        }
+
         public bool Save()
         {
             int num = _context.SaveChanges();

@@ -89,7 +89,37 @@ namespace CatsReviewWebAPI.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Soccessfully created");
+            return Ok("Successfully created");
+        }
+
+        [HttpPut("{countryId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCountry(int countryId, [FromBody] CountryDto createCountry)
+        {
+            if (createCountry == null)
+                BadRequest(ModelState);
+
+            if (countryId != createCountry?.Id)
+                BadRequest(ModelState);
+
+            var cat = _countryRepository.GetValues().Where(c => c.Id == createCountry?.Id).FirstOrDefault();
+
+            if (cat == null)
+                NotFound();
+
+            if (!ModelState.IsValid)
+                BadRequest(ModelState);
+
+            var countryMap = _mapper.Map<Country>(createCountry);
+            if (!_countryRepository.UpdateObject(countryMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while updating");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully updated");
         }
     }
 }

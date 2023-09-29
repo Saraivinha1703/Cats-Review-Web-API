@@ -10,5 +10,6 @@ namespace CatsReviewWebAPI.Interfaces
         ICollection<Review> GetCatReviews(int catId);
         ICollection<Reviewer?> GetCatReviewers(int catId);
         bool CreateObject(Cat cat, CatOwner catOwner, CatCategory catCategory);
+        bool UpdateObject(Cat cat, CatOwner catOwner, CatCategory catCategory);
     }
 }

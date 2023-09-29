@@ -2,8 +2,10 @@ using CatsReviewWebAPI.Data;
 using CatsReviewWebAPI.Interfaces;
 using CatsReviewWebAPI.Models;
 
-namespace CatsReviewWebAPI.Repository {
-    public class ReviewRepository : IReviewRepository {
+namespace CatsReviewWebAPI.Repository
+{
+    public class ReviewRepository : IReviewRepository
+    {
         private readonly DataContext _context;
         public ReviewRepository(DataContext context)
         {
@@ -38,6 +40,12 @@ namespace CatsReviewWebAPI.Repository {
         public bool CreateObject(Review obj)
         {
             _context.Add(obj);
+            return Save();
+        }
+
+        public bool UpdateObject(Review obj)
+        {
+            _context.Update(obj);
             return Save();
         }
 
