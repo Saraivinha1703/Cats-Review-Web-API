@@ -7,7 +7,6 @@ namespace CatsReviewWebAPI.Interfaces
         bool ValueExists(int id);
 
         bool CreateObject(T obj);
-
         bool Save();
     }
 }

@@ -28,6 +28,10 @@ namespace CatsReviewWebAPI.Repository
             return _context.CatOwners.Where(co => co.CatId == catId).Select(co => co.Owner).FirstOrDefault();
         }
 
+        public Category? GetCategoryByCat(int catId) {
+            return _context.CatCategories.Where(cc => cc.Cat.Id == catId).Select(cc => cc.Category).FirstOrDefault();
+        }
+
         public ICollection<Review> GetCatReviews(int catId)
         {
             return _context.Reviews.Where(r => r.Cat.Id == catId).ToList();
@@ -45,6 +49,14 @@ namespace CatsReviewWebAPI.Repository
         public bool CreateObject(Cat obj)
         {
             _context.Add(obj);
+            return Save();
+        }
+
+        public bool CreateObject(Cat cat, CatOwner catOwner, CatCategory catCategory)
+        {
+            _context.Add(catOwner);
+            _context.Add(catCategory);
+            _context.Add(cat);
             return Save();
         }
 

@@ -61,6 +61,18 @@ namespace CatsReviewWebAPI.Controllers
             return Ok(cat);
         }
 
+        [HttpGet("catCategory/{catId}")]
+        [ProducesResponseType(200, Type = typeof(CategoryDto))]
+        [ProducesResponseType(400)]
+        public IActionResult GetCatCategory(int catId)
+        {
+            CategoryDto cat = _mapper.Map<CategoryDto>(_catRepository.GetCategoryByCat(catId));
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(cat);
+        }
+
         [HttpGet("catReviews/{catId}")]
         [ProducesResponseType(200, Type = typeof(List<ReviewDto>))]
         [ProducesResponseType(400)]
@@ -85,6 +97,7 @@ namespace CatsReviewWebAPI.Controllers
             return Ok(cat);
         }
 
+
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -105,12 +118,13 @@ namespace CatsReviewWebAPI.Controllers
                 BadRequest(ModelState);
 
             var catMap = _mapper.Map<Cat>(createCat);
-            Owner? catOwnerEntity = _ownerRepository.GetValue(ownerId);
-            Category? catCategory = _categoryRepository.GetValue(categoryId);
+            Owner? owner = _ownerRepository.GetValue(ownerId);
+            Category? category = _categoryRepository.GetValue(categoryId);
 
-            CatOwner catOwner = new CatOwner(){Owner = catOwnerEntity, Cat = catMap};
+            CatOwner catOwner = new CatOwner(){Owner = owner, Cat = catMap};
+            CatCategory catCategory = new CatCategory(){Category = category, Cat = catMap};
             
-            if (!_catRepository.CreateObject(catMap))
+            if (!_catRepository.CreateObject(catMap, catOwner, catCategory))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
