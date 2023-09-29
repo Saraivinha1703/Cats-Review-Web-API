@@ -45,11 +45,11 @@ namespace CatsReviewWebAPI.Controllers
             return Ok(owner);
         }
 
-        [HttpGet("catByOwner/{ownerId}")]
-        [ProducesResponseType(200, Type = typeof(CatDto))]
+        [HttpGet("catsByOwner/{ownerId}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<CatDto>))]
         public IActionResult GetCatByOwner(int ownerId)
         {
-            CatDto cat = _mapper.Map<CatDto>(_ownerRepository.GetCatByOwner(ownerId));
+            List<CatDto> cat = _mapper.Map<List<CatDto>>(_ownerRepository.GetCatsByOwner(ownerId));
 
             if (!ModelState.IsValid)
                 BadRequest(ModelState);
@@ -99,5 +99,38 @@ namespace CatsReviewWebAPI.Controllers
             return Ok("Soccessfully created");
         }
 
+
+        [HttpPut("{ownerId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCountry(int ownerId, [FromQuery] int catId, [FromQuery] int countryId, [FromBody] OwnerDto createOwner)
+        {
+            if (createOwner == null)
+                BadRequest(ModelState);
+
+            if (ownerId != createOwner?.Id)
+                BadRequest(ModelState);
+
+            var owner = _ownerRepository.GetValues().Where(c => c.Id == createOwner?.Id).FirstOrDefault();
+            var country = _countryRepository.GetValue(countryId); 
+
+            if (owner == null)
+                NotFound();
+
+            if (!ModelState.IsValid)
+                BadRequest(ModelState);
+
+            var ownerMap = _mapper.Map(createOwner, owner);
+            ownerMap.Country = country;
+
+            if (!_ownerRepository.UpdateObject(ownerMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while updating");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully updated");
+        }
     }
 }

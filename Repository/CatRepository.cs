@@ -23,9 +23,9 @@ namespace CatsReviewWebAPI.Repository
             return _context.Cats.Where(c => c.Id == id).FirstOrDefault();
         }
         
-        public Owner? GetOwnerByCat(int catId)
+        public ICollection<Owner?> GetOwnerByCat(int catId)
         {
-            return _context.CatOwners.Where(co => co.CatId == catId).Select(co => co.Owner).FirstOrDefault();
+            return _context.CatOwners.Where(co => co.CatId == catId).Select(co => co.Owner).ToList();
         }
 
         public Category? GetCategoryByCat(int catId) {

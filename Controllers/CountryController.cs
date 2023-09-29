@@ -104,15 +104,15 @@ namespace CatsReviewWebAPI.Controllers
             if (countryId != createCountry?.Id)
                 BadRequest(ModelState);
 
-            var cat = _countryRepository.GetValues().Where(c => c.Id == createCountry?.Id).FirstOrDefault();
+            var country = _countryRepository.GetValues().Where(c => c.Id == createCountry?.Id).FirstOrDefault();
 
-            if (cat == null)
+            if (country == null)
                 NotFound();
 
             if (!ModelState.IsValid)
                 BadRequest(ModelState);
 
-            var countryMap = _mapper.Map<Country>(createCountry);
+            var countryMap = _mapper.Map(createCountry, country);
             if (!_countryRepository.UpdateObject(countryMap))
             {
                 ModelState.AddModelError("", "Something went wrong while updating");

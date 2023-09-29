@@ -50,11 +50,11 @@ namespace CatsReviewWebAPI.Controllers
         }
 
         [HttpGet("ownerByCat/{catId}")]
-        [ProducesResponseType(200, Type = typeof(Owner))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<OwnerDto>))]
         [ProducesResponseType(400)]
         public IActionResult GetOwnerByCat(int catId)
         {
-            OwnerDto cat = _mapper.Map<OwnerDto>(_catRepository.GetOwnerByCat(catId));
+            List<OwnerDto> cat = _mapper.Map<List<OwnerDto>>(_catRepository.GetOwnerByCat(catId));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 

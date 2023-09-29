@@ -1,6 +1,5 @@
 using CatsReviewWebAPI.Data;
 using CatsReviewWebAPI.Interfaces;
-using CatsReviewWebAPI.Models;
 using CatsReviewWebAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddTransient<Seed>();
+//builder.Services.AddTransient<Seed>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICatRepository, CatRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
